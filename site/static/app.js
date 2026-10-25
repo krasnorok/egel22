@@ -1,7 +1,7 @@
 // egel22.ru: официальные задания ЕГЭ по информатике. Статичный сайт без входа и без сервера.
 // Задания лежат в /data/*.json, ответ проверяется в браузере (local.js), прогресс хранится в localStorage.
 
-import { localApi, progressCount, resetProgress } from "./local.js?v=9bb97417";
+import { localApi, progressCount, resetProgress } from "./local.js?v=ba1c45f0";
 
 const $view = document.getElementById("view");
 const $bar = document.getElementById("sitebar");
@@ -295,21 +295,13 @@ function homeHTML(d) {
       </div>
     </div>
     <div style="margin-top:16px">${nextBlock}</div>
-    ${footerHTML("foot-side")}
     </div><div class="home-main">
     <section class="section">
       <div class="section-head"><h2>Карта экзамена</h2><span class="meta">${d.totals.main_solved} из ${d.totals.main_total}</span></div>
       <div class="kim">${cells.join("")}</div>
     </section>
     </div></div>
-    ${footerHTML("foot-bottom")}`;
-}
-function footerHTML(cls = "") {
-  return `<footer class="foot ${cls}">
-    <span>Прогресс хранится только в этом браузере и никуда не отправляется.</span>
-    <a href="#/about">О сайте и прогрессе</a>
-    <span>Задания: официальные варианты ЕГЭ, демоверсии, досрочные и открытые варианты, апробации ФИПИ.</span>
-  </footer>`;
+`;
 }
 
 // ---------- Номер КИМ ----------
@@ -814,6 +806,8 @@ function viewAbout() {
       <p>Официальные задания ЕГЭ по информатике по номерам, от новых к старым: основной ЕГЭ, досрочные и открытые варианты, демоверсии, апробации.</p>
       <p>Регистрации нет. Ответы проверяются прямо в браузере, решённые задания запоминаются в памяти этого браузера. На сервер ничего не отправляется, сайт не собирает персональные данные и не использует cookie.</p>
       <p>На другом устройстве или в другом браузере прогресс будет свой. Если очистить данные браузера, прогресс пропадёт.</p>
+      <p>Все материалы взяты из открытых источников.</p>
+      <p>Сайт сделал Красильников А.П.</p>
     </div>
     <section class="section">
       <div class="section-head"><h2>Ваш прогресс</h2><span class="meta">${n} ${pointsWord(n)}</span></div>
