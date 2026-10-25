@@ -1,7 +1,7 @@
 // egel22.ru: официальные задания ЕГЭ по информатике. Статичный сайт без входа и без сервера.
 // Задания лежат в /data/*.json, ответ проверяется в браузере (local.js), прогресс хранится в localStorage.
 
-import { localApi, progressCount, resetProgress } from "./local.js?v=ba1c45f0";
+import { localApi, progressCount, resetProgress } from "./local.js?v=4f6f3b68";
 
 const $view = document.getElementById("view");
 const $bar = document.getElementById("sitebar");
@@ -330,6 +330,13 @@ function renderNumber(d, n) {
           <div class="bar big"><i style="width:${pct(d.main_solved, d.main_total)}%"></i></div>
           ${cta}
         </div>
+
+      </div>
+      <section class="section n-list">
+        <div class="section-head"><h2>Задачи по годам</h2><span class="meta">сначала новые</span></div>
+        ${groupedHTML(d.tasks)}
+      </section>
+      <section class="section">
         ${d.extra_total ? `
         <div class="card extra">
           <span class="ico">${d.extra_unlocked ? ICON.open : ICON.lock}</span>
@@ -341,10 +348,6 @@ function renderNumber(d, n) {
               : `<p>Откроются, когда решишь все официальные задачи номера. Осталось ${left}.</p>`}
           </div>
         </div>` : ""}
-      </div>
-      <section class="section n-list">
-        <div class="section-head"><h2>Задачи по годам</h2><span class="meta">сначала новые</span></div>
-        ${groupedHTML(d.tasks)}
       </section>
     </div>`;
 }
