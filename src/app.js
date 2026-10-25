@@ -12,10 +12,23 @@ const $toast = document.getElementById("toast");
 const DESKTOP = matchMedia("(min-width: 960px)");
 
 // ---------- Тема ----------
+// По умолчанию как в системе; кнопка в шапке переключает и запоминает выбор в этом браузере
 const darkMQ = matchMedia("(prefers-color-scheme: dark)");
-const applyTheme = () => { document.documentElement.dataset.theme = darkMQ.matches ? "dark" : "light"; };
+let themePref = null;
+try { themePref = localStorage.getItem("theme"); } catch (_) {}
+const theme = () => themePref || (darkMQ.matches ? "dark" : "light");
+function applyTheme() {
+  document.documentElement.dataset.theme = theme();
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", theme() === "dark" ? "#0f0f10" : "#2b5491");
+}
 applyTheme();
-darkMQ.addEventListener("change", () => { applyTheme(); render(); });
+darkMQ.addEventListener("change", () => { if (!themePref) { applyTheme(); render(); } });
+function toggleTheme() {
+  themePref = theme() === "dark" ? "light" : "dark";
+  try { localStorage.setItem("theme", themePref); } catch (_) {}
+  applyTheme();
+  setBack(backTarget);
+}
 
 // ---------- Утилиты ----------
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
@@ -52,6 +65,8 @@ const ICON = {
   open: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 6.8-1.2"/></svg>',
   file: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3.5H7.5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8z"/><path d="M14 3.5V8h4.5M12 11v6M9.5 14.5L12 17l2.5-2.5"/></svg>',
   back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>',
+  sun: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>',
+  moon: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>',
 };
 const CHECK = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 const G = {
@@ -78,7 +93,8 @@ function setBack(target) {
   backTarget = target;
   const back = target ? `<a class="site-back" href="${target}" aria-label="Назад">${ICON.back}</a>` : "";
   $bar.innerHTML = `${back}<a class="site-brand" href="#/"><img src="/static/icons/icon-64.png" alt="" width="34" height="34"><span>ЕГЭ по информатике</span></a>
-    <nav class="site-right"><a class="site-link" href="#/about">О сайте</a></nav>`;
+    <nav class="site-right"><a class="site-link" href="#/about">О сайте</a><button class="site-theme" type="button" id="themeBtn" aria-label="${theme() === "dark" ? "Светлая тема" : "Тёмная тема"}" title="${theme() === "dark" ? "Светлая тема" : "Тёмная тема"}">${theme() === "dark" ? ICON.sun : ICON.moon}</button></nav>`;
+  document.getElementById("themeBtn").onclick = toggleTheme;
 }
 const go = (hash) => { location.hash = hash; };
 

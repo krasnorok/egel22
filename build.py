@@ -72,6 +72,8 @@ def main():
 
     # версия сайта: меняется, когда поменялись задания или интерфейс, и браузеры берут свежие файлы
     h = hashlib.sha1(bank.version.encode())
+    for f in sorted((OUT / "data").rglob("*.json")):
+        h.update(f.read_bytes())
     for f in sorted(SRC.rglob("*")):
         if f.is_file() and f.suffix in (".html", ".js", ".css", ".webmanifest"):
             h.update(f.read_bytes())
